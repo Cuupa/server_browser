@@ -7,7 +7,7 @@
     <script src="../static/js/bootstrap.js"></script>
     <script type="text/javascript">
         function rowClicked(value) {
-            location.href = "/dir?path=" + value;
+            location.href = "/list?path=" + value;
         }
     </script>
 </head>
@@ -23,11 +23,10 @@
         <th>Last access</th>
     </tr>
     </thead>
-    ../
     <tr style="cursor: pointer" th:each="result : ${gui.listings}"
         th:onclick="javascript:rowClicked([[${result.parent + '/' + result.filename}]]);">
-        <td><img th:src="${result.type.name().equals('DIRECTORY') ? '[D]' : '[F]'}"></td>
-        <td><span th:text="${result.filename}"></span></td>
+        <td><span th:text="${result.type.name().equals('DIRECTORY') ? '[D]' : '[F]'}"></span></td>
+        <td><span th:text="${result.displayText}"></span></td>
         <td><span th:text="${result.size}"></span></td>
         <td><span th:text="${result.lastAccessDate}"></span></td>
 

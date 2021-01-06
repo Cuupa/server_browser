@@ -19,7 +19,7 @@ interface FileCollector {
      * If no files are found, applicable according to the filter or an error occures, it returns an empty list
      * @throws AccessDeniedException If the program has no access to a directory
      */
-    fun collect(dir: String?, filter: List<BrowserFileFilter>): List<BrowserFileObject>
+    fun collect(dir: String?, filters: List<BrowserFileFilter>): List<BrowserFileObject>
 
     /**
      * Lists the content of a directory with a MatchAllFileFilter

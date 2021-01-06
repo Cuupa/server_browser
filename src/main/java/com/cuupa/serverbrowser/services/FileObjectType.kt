@@ -4,4 +4,6 @@ enum class FileObjectType {
 
     FILE,
     DIRECTORY
+
+
 }
