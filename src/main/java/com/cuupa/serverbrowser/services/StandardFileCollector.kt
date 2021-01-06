@@ -16,7 +16,7 @@ import java.util.stream.Collectors
 
 class StandardFileCollector : FileCollector {
 
-    val log = LogFactory.getLog(StandardFileCollector::class.java)
+    private val log = LogFactory.getLog(StandardFileCollector::class.java)
 
     override fun collect(dir: String?, filters: List<BrowserFileFilter>): List<BrowserFileObject> {
         if (log.isInfoEnabled) {

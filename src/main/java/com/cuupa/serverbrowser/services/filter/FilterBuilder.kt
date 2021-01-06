@@ -24,7 +24,6 @@ class FilterBuilder {
         return this
     }
 
-
     fun withDirectory(filter: String?): FilterBuilder {
         list.add(DirectoryFilter(filter))
         return this

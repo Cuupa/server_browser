@@ -7,4 +7,8 @@ class ExcludeHiddenFileFilter : BrowserFileFilter {
     override fun applies(file: File): Boolean {
         return !file.isHidden && file.name.startsWith(".")
     }
+
+    override fun toString(): String {
+        return "ExcludeHiddenFileFilter()"
+    }
 }

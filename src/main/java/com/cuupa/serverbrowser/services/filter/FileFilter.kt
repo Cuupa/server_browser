@@ -13,4 +13,8 @@ class FileFilter(private val filter: String?) : BrowserFileFilter {
             file.isFile && !file.isDirectory && file.name.toLowerCase().contains(filter.toLowerCase())
         }
     }
+
+    override fun toString(): String {
+        return "FileFilter($filter)"
+    }
 }
