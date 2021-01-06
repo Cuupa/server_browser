@@ -22,31 +22,34 @@ class StandardFileCollector : FileCollector {
         if (log.isInfoEnabled) {
             log.info("Collecting files in '$dir' with filter '$filters'")
         }
-        return if (dir.isNullOrBlank()) {
-            listOf()
-        } else {
-            return try {
+        if (!dir.isNullOrBlank()) {
+            try {
                 val filelist = getFileList(dir, filters)
-
-                filelist.add(
-                    getParentDirectory(filelist)
-                )
-                filelist.sortedWith(
-                    compareBy<BrowserFileObject> { it.type }.reversed().thenBy { it.displayText.toLowerCase() })
+                filelist.add(getParentDirectory(filelist))
+                return filelist.sortedWith(
+                    compareBy<BrowserFileObject> { it.type }.reversed()
+                        .thenBy { it.displayText.toLowerCase() })
             } catch (ex: NoSuchFileException) {
-                listOf()
+                if (log.isWarnEnabled) {
+                    log.warn(ex)
+                }
             }
         }
+        return listOf(
+            BrowserFileObject(
+                DIRECTORY,
+                "",
+                "../",
+                "../",
+                0,
+                getLastModifiedLocalDateTime(0)
+            )
+        )
     }
 
     private fun getParentDirectory(filelist: MutableList<BrowserFileObject>): BrowserFileObject {
         val element = filelist.firstOrNull()
-        val parent = if (element != null) {
-            element.parent
-                .split("/").dropLast(1).stream().collect(Collectors.joining("/"))
-        } else {
-            ""
-        }
+        val parent = element?.parent?.split("/")?.dropLast(1)?.joinToString("/", "", "") ?: ""
         return BrowserFileObject(
             DIRECTORY,
             "",
