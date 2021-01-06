@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Server-Browser</title>
+    <link media="screen" rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css"/>
+    <script src="../static/js/bootstrap.js"></script>
+    <script type="text/javascript">
+        function rowClicked(value) {
+            location.href = "/dir?path=" + value;
+        }
+    </script>
+</head>
+
+<body>
+<table class="table table-striped">
+    <h1>Index of <span th:text="${gui.currentDir}"></span></h1>
+    <thead class="thead-dark">
+    <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Last access</th>
+    </tr>
+    </thead>
+    ../
+    <tr style="cursor: pointer" th:each="result : ${gui.listings}"
+        th:onclick="javascript:rowClicked([[${result.parent + '/' + result.filename}]]);">
+        <td><img th:src="${result.type.name().equals('DIRECTORY') ? '[D]' : '[F]'}"></td>
+        <td><span th:text="${result.filename}"></span></td>
+        <td><span th:text="${result.size}"></span></td>
+        <td><span th:text="${result.lastAccessDate}"></span></td>
+
+    </tr>
+</table>
+</body>
+</html>
