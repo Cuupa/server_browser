@@ -2,6 +2,7 @@ package com.cuupa.serverbrowser.services
 
 import com.cuupa.serverbrowser.services.FileObjectType.DIRECTORY
 import com.cuupa.serverbrowser.services.FileObjectType.FILE
+import com.cuupa.serverbrowser.services.filter.BlacklistFilter
 import com.cuupa.serverbrowser.services.filter.BrowserFileFilter
 import com.cuupa.serverbrowser.services.filter.MatchAllFileFilter
 import org.apache.commons.logging.LogFactory
@@ -61,7 +62,9 @@ class StandardFileCollector : FileCollector {
     }
 
     private fun getFileList(dir: String?, filters: List<BrowserFileFilter>): MutableList<BrowserFileObject> {
-        return Files.list(Path.of(dir)).filter { filters.any { filter -> filter.applies(it.toFile()) } }
+        val blacklistFilter = filters.find { it is BlacklistFilter }
+        val files = Files.list(Path.of(dir)).filter { blacklistFilter?.applies(it.toFile()) ?: true }
+        return files.filter { filters.any { filter -> filter.applies(it.toFile()) } }
             .map { it.toFile() }
             .map {
                 BrowserFileObject(

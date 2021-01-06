@@ -6,9 +6,13 @@
     <link media="screen" rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css"/>
     <script src="../static/js/bootstrap.js"></script>
     <script type="text/javascript">
-        function rowClicked(value, type) {
+        function rowClicked(value, type, downloadable) {
             if (type === 'DIRECTORY') {
                 location.href = "/filebrowser/list?path=" + value;
+            }
+
+            if (type === 'FILE' && downloadable) {
+                window.open(location.host + '/filebrowser/download?fileName=' + value)
             }
         }
     </script>
@@ -27,7 +31,7 @@
     </tr>
     </thead>
     <tr style="cursor: pointer" th:each="result : ${gui.listings}"
-        th:onclick="javascript:rowClicked([[${result.parent + '/' + result.filename}]], [[${result.type}]]);">
+        th:onclick="javascript:rowClicked([[${result.parent + '/' + result.filename}]], [[${result.type}]], [[${gui.downloadable}]]);">
         <td><span th:text="${result.type.name().equals('DIRECTORY') ? '[D]' : '[F]'}"></span></td>
         <td><span th:text="${result.displayText}"></span></td>
         <td><span th:text="${result.size}"></span></td>

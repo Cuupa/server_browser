@@ -32,4 +32,9 @@ class FilterBuilder {
     fun build(): List<BrowserFileFilter> {
         return list.toList()
     }
+
+    fun excludeDirectories(blacklisted: List<String>): FilterBuilder {
+        list.add(BlacklistFilter(blacklisted))
+        return this
+    }
 }
