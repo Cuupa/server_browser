@@ -36,4 +36,9 @@ project. Source code, templates, ideas, you name it
 
 ## Configration
 
-- currently no configuration available
+The application.yml has some fields to configure
+
+- server.port: The port on which this application is listening to. Default "8080"
+- downloadable: true, if you want to download single files by clicking them. Default "false"
+- show_hidden_files: If false, then hidden files and directories and the ones starting with "." (standard way of hiding
+  files in UNIX) are not displayed: Default "false"
