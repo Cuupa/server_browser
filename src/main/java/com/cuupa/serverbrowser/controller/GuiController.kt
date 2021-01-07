@@ -1,9 +1,9 @@
 package com.cuupa.serverbrowser.controller
 
 import com.cuupa.serverbrowser.services.FileCollector
-import com.cuupa.serverbrowser.services.filter.BlacklistFilter
-import com.cuupa.serverbrowser.services.filter.FilterBuilder
+import com.cuupa.serverbrowser.services.filter.Filters
 import org.apache.commons.io.IOUtils.copy
+import org.apache.juli.logging.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -20,25 +20,27 @@ import javax.servlet.http.HttpServletResponse
 @RequestMapping("/filebrowser")
 class GuiController {
 
+    private val log = LogFactory.getLog(GuiController::class.java)
+
     @Autowired
     private var fileCollector: FileCollector? = null
+
+    @Autowired
+    private var filters: Filters? = null
 
     @Value("\${filebrowser.downloadable:false}")
     private var downloadable = false
 
-    @Value("\${filebrowser.blacklisted}")
-    private var blacklisted = listOf<String>()
-
     @GetMapping("")
     fun index(model: Model): String {
-        val list = fileCollector?.collect("/", filters()) ?: listOf()
+        val list = fileCollector?.collect("/", filters) ?: listOf()
         model.addAttribute("gui", Gui("/", list, downloadable))
         return "index"
     }
 
     @GetMapping("/list")
     fun index1(model: Model, @RequestParam("path") path: String): String {
-        val list = fileCollector?.collect(path, filters()) ?: listOf()
+        val list = fileCollector?.collect(path, filters) ?: listOf()
         model.addAttribute("gui", Gui(path, list, downloadable))
         return "index"
     }
@@ -49,18 +51,15 @@ class GuiController {
         response: HttpServletResponse
     ): String {
         try {
-            val filter = filters().find { it is BlacklistFilter }
-            filter?.let {
-                if (filter.applies(File(fileName))) {
-                    copy(FileInputStream(fileName), response.outputStream)
-                    response.flushBuffer()
-                }
+            if (filters?.applies(File(fileName)) == true) {
+                copy(FileInputStream(fileName), response.outputStream)
+                response.flushBuffer()
+            } else {
+                log.error("Download of $fileName denied")
             }
         } catch (ex: IOException) {
+            log.error(fileName, ex)
         }
         return "index"
     }
-
-    private fun filters() = FilterBuilder().withDirectory().withFiles().excludeDirectories(blacklisted).build()
-
 }

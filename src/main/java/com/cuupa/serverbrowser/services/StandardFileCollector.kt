@@ -2,9 +2,7 @@ package com.cuupa.serverbrowser.services
 
 import com.cuupa.serverbrowser.services.FileObjectType.DIRECTORY
 import com.cuupa.serverbrowser.services.FileObjectType.FILE
-import com.cuupa.serverbrowser.services.filter.BlacklistFilter
-import com.cuupa.serverbrowser.services.filter.BrowserFileFilter
-import com.cuupa.serverbrowser.services.filter.MatchAllFileFilter
+import com.cuupa.serverbrowser.services.filter.Filters
 import org.apache.commons.logging.LogFactory
 import java.io.File
 import java.nio.file.Files
@@ -19,7 +17,7 @@ class StandardFileCollector : FileCollector {
 
     private val log = LogFactory.getLog(StandardFileCollector::class.java)
 
-    override fun collect(dir: String?, filters: List<BrowserFileFilter>): List<BrowserFileObject> {
+    override fun collect(dir: String?, filters: Filters?): List<BrowserFileObject> {
         if (log.isInfoEnabled) {
             log.info("Collecting files in '$dir' with filter '$filters'")
         }
@@ -61,10 +59,10 @@ class StandardFileCollector : FileCollector {
         )
     }
 
-    private fun getFileList(dir: String?, filters: List<BrowserFileFilter>): MutableList<BrowserFileObject> {
-        val blacklistFilter = filters.find { it is BlacklistFilter }
-        val files = Files.list(Path.of(dir)).filter { blacklistFilter?.applies(it.toFile()) ?: true }
-        return files.filter { filters.any { filter -> filter.applies(it.toFile()) } }
+    private fun getFileList(dir: String?, filters: Filters?): MutableList<BrowserFileObject> {
+        val unfilteredFileList = Files.list(Path.of(dir))
+        val files = filters?.apply(unfilteredFileList) ?: unfilteredFileList
+        return files
             .map { it.toFile() }
             .map {
                 BrowserFileObject(
@@ -79,7 +77,7 @@ class StandardFileCollector : FileCollector {
     }
 
     override fun collect(dir: String?): List<BrowserFileObject> {
-        return collect(dir, listOf(MatchAllFileFilter()))
+        return collect(dir, null)
     }
 
     private fun getLastModifiedLocalDateTime(lastModified: Long): LocalDateTime =

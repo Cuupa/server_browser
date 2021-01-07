@@ -29,8 +29,8 @@ class FilterBuilder {
         return this
     }
 
-    fun build(): List<BrowserFileFilter> {
-        return list.toList()
+    fun build(): Filters {
+        return Filters(list.toList())
     }
 
     fun excludeDirectories(blacklisted: List<String>): FilterBuilder {

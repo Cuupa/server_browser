@@ -2,5 +2,6 @@ server.port: 8080
 
 filebrowser:
   downloadable: false
+  show_hidden_files: false
   # Blacklisted directories to prevent leaking out system infos. Change at your discretion
   blacklisted: /bin, /boot, /dev, /root, /sbin, /sys
