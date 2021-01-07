@@ -4,4 +4,5 @@ filebrowser:
   downloadable: false
   show_hidden_files: false
   # Blacklisted directories to prevent leaking out system infos. Change at your discretion
-  blacklisted: /bin, /boot, /dev, /root, /sbin, /sys
+  # I highly suggest that you use a dedicated user, which can't access the critical files in the first place!
+  blacklisted: /bin, /boot, /dev, /root, /sbin, /sys, C:\Windows
