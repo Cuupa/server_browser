@@ -31,17 +31,20 @@ class GuiController {
     @Value("\${filebrowser.downloadable:false}")
     private var downloadable = false
 
+    private val path =
+        File(ClassLoader.getSystemClassLoader()?.getResource(".")?.path ?: System.getProperty("user.home")).absolutePath
+
     @GetMapping("")
     fun index(model: Model): String {
-        val list = fileCollector?.collect("/", filters) ?: listOf()
-        model.addAttribute("gui", Gui("/", list, downloadable))
+        val list = fileCollector?.collect(path, filters) ?: listOf()
+        model.addAttribute(Gui.name, Gui(path, list, downloadable))
         return "index"
     }
 
     @GetMapping("/list")
     fun index1(model: Model, @RequestParam("path") path: String): String {
         val list = fileCollector?.collect(path, filters) ?: listOf()
-        model.addAttribute("gui", Gui(path, list, downloadable))
+        model.addAttribute(Gui.name, Gui(path, list, downloadable))
         return "index"
     }
 
@@ -51,7 +54,7 @@ class GuiController {
         response: HttpServletResponse
     ): String {
         try {
-            if (filters?.applies(File(fileName)) == true) {
+            if (filters?.applies(File(fileName)) == true) { // make sure the target is not blacklisted etc
                 copy(FileInputStream(fileName), response.outputStream)
                 response.flushBuffer()
             } else {
