@@ -18,11 +18,14 @@ open class ApplicationConfiguration {
     private var showHiddenFiles = false
 
     @Bean
-    open fun filters(): Filters {
+    open fun defaultFilter(): Filters {
         val filter = FilterBuilder()
             .withDirectory()
             .withFiles()
-            .excludeDirectories(blacklisted)
+
+        if (blacklisted.isNullOrEmpty()) {
+            filter.excludeDirectories(blacklisted)
+        }
 
         if (!showHiddenFiles) {
             filter.excludeHidden()

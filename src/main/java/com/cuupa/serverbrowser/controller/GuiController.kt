@@ -31,13 +31,13 @@ class GuiController {
     @Value("\${filebrowser.downloadable:false}")
     private var downloadable = false
 
-    private val path =
+    private val standardPath =
         File(ClassLoader.getSystemClassLoader()?.getResource(".")?.path ?: System.getProperty("user.home")).absolutePath
 
     @GetMapping("")
     fun index(model: Model): String {
-        val list = fileCollector?.collect(path, filters) ?: listOf()
-        model.addAttribute(Gui.name, Gui(path, list, downloadable))
+        val list = fileCollector?.collect(standardPath, filters) ?: listOf()
+        model.addAttribute(Gui.name, Gui(standardPath, list, downloadable))
         return "index"
     }
 
