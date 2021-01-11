@@ -51,7 +51,7 @@ class StandardFileCollector : FileCollector {
         val parent = element?.parent?.split("/")?.dropLast(1)?.joinToString("/", "", "") ?: ""
         return BrowserFileObject(
             DIRECTORY,
-            "",
+            normalizePath(parent),
             parent,
             "../",
             0,
@@ -67,7 +67,7 @@ class StandardFileCollector : FileCollector {
             .map {
                 BrowserFileObject(
                     getType(it),
-                    it.parent,
+                    normalizePath(it.parent),
                     it.name,
                     it.name,
                     it.length(),
@@ -75,6 +75,8 @@ class StandardFileCollector : FileCollector {
                 )
             }.collect(Collectors.toList())
     }
+
+    private fun normalizePath(it: String) = it.replace("\\", "/")
 
     override fun collect(dir: String?): List<BrowserFileObject> {
         return collect(dir, null)

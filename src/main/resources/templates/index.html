@@ -31,7 +31,7 @@
     </tr>
     </thead>
     <tr style="cursor: pointer" th:each="result : ${gui.listings}"
-        th:onclick="javascript:rowClicked([[${result.parent + '/' + result.filename}]], [[${result.type}]], [[${gui.downloadable}]]);">
+        th:onclick="javascript:rowClicked([[${result.parent}]], [[${result.type}]], [[${gui.downloadable}]]);">
         <td><span th:text="${result.type.name().equals('DIRECTORY') ? '[D]' : '[F]'}"></span></td>
         <td><span th:text="${result.displayText}"></span></td>
         <td><span th:text="${result.size}"></span></td>

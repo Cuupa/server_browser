@@ -17,4 +17,8 @@ class Filters(val filterList: List<BrowserFileFilter>) {
     }
 
     private fun blacklistFilter() = filterList.find { it is BlacklistFilter }
+
+    override fun toString(): String {
+        return filterList.joinToString(", ", "", "")
+    }
 }
