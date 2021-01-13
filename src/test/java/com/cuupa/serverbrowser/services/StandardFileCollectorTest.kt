@@ -13,7 +13,7 @@ internal class StandardFileCollectorTest {
     @Test
     fun collectEmptyString() {
         val list = unitToTest.collect("")
-        assertEquals(0, list.size)
+        assertEquals(1, list.size)
     }
 
     /**
@@ -28,7 +28,7 @@ internal class StandardFileCollectorTest {
     @Test
     fun collectWithoutFilters() {
         val list = unitToTest.collect(directoryToTest)
-        assertEquals(7, list.size)
+        assertEquals(6, list.size)
     }
 
     @Test
@@ -40,7 +40,7 @@ internal class StandardFileCollectorTest {
     @Test
     fun collectWithoutDirectories() {
         val list = unitToTest.collect(directoryToTest, FilterBuilder().withFiles().build())
-        assertEquals(6, list.size)
+        assertEquals(5, list.size)
     }
 
     @Test
